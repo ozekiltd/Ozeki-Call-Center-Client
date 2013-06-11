@@ -1,0 +1,8 @@
+﻿<Window x:Class="OzCommon.View.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" WindowStartupLocation="CenterOwner"
+        Title="Settings" Height="300" Width="300" SizeToContent="WidthAndHeight" ResizeMode="NoResize" Style="{DynamicResource WindowIconStyle}">
+    <Grid Background="#dceadd">
+        <ContentControl Content="{Binding DataContext, RelativeSource={RelativeSource Self}}"/>
+        </Grid>
+</Window>

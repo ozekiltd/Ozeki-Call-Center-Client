@@ -1,0 +1,1211 @@
+﻿<Window x:Class="OzCommonBroadcasts.View.BroadcastMainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:tb="clr-namespace:Hardcodet.Wpf.TaskbarNotification;assembly=Hardcodet.Wpf.TaskbarNotification"
+        mc:Ignorable="d" StateChanged="BroadCastMainWindow_OnStateChanged"
+        
+        Title="MainWindow" Height="490" Width="715" Style="{DynamicResource WindowIconStyle}" WindowStartupLocation="CenterScreen" ResizeMode="CanResizeWithGrip" WindowStyle="None" AllowsTransparency="True">
+    <Window.Resources>
+        <Style x:Key="undericon_title" TargetType="Label">
+            <Setter Property="FontSize" Value="9"/>
+            <Setter Property="HorizontalContentAlignment" Value="center"/>
+            <Setter Property="Margin" Value="0,26,0,0"/>
+            <Setter Property="VerticalAlignment" Value="top"/>
+            <Setter Property="Height" Value="25"/>
+        </Style>
+
+        <DataTemplate x:Key="errorTemplate">
+            <Grid Margin="0,-2,0,-2">
+                <Ellipse StrokeThickness="0"
+                         Fill="Red"
+                         Width="16"
+                         Height="16"/>
+                <TextBlock Text="!"
+                           FontWeight="Bold"
+                           Foreground="White"
+                           HorizontalAlignment="Center"/>
+            </Grid>
+        </DataTemplate>
+
+        <Style x:Key="ReadOnlyCheck" TargetType="{x:Type DataGridRow}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsCompleted}" Value="True">
+                    <Setter Property="Tag" Value="ReadOnly" />
+                    <Setter Property="Background" Value="Gainsboro"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="menutitles" TargetType="MenuItem">
+            <Setter Property="FontSize" Value="13">
+            </Setter>
+        </Style>
+        <Style x:Key="submenutitles" TargetType="MenuItem">
+            <Setter Property="Foreground" Value="Black">
+            </Setter>
+        </Style>
+        <Style x:Key="new_icon" TargetType="{x:Type Button}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal"/>
+                                    <VisualState x:Name="MouseOver">
+                                        <Storyboard>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)" Storyboard.TargetName="label">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.3"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)" Storyboard.TargetName="label">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.3"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="label">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)" Storyboard.TargetName="label">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="-0.825"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)" Storyboard.TargetName="image">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.3"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)" Storyboard.TargetName="image">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.3"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="image">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)" Storyboard.TargetName="image">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="-2.325"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)" Storyboard.TargetName="label1">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.3"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)" Storyboard.TargetName="label1">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.3"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="label1">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)" Storyboard.TargetName="label1">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="3.225"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)" Storyboard.TargetName="contentPresenter">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.3"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)" Storyboard.TargetName="contentPresenter">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.3"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="contentPresenter">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)" Storyboard.TargetName="contentPresenter">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="-0.825"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed"/>
+                                    <VisualState x:Name="Disabled"/>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Label x:Name="label" Height="3" Width="40" RenderTransformOrigin="0.5,0.5">
+                                <Label.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform/>
+                                        <SkewTransform/>
+                                        <RotateTransform/>
+                                        <TranslateTransform/>
+                                    </TransformGroup>
+                                </Label.RenderTransform>
+                            </Label>
+                            <Image x:Name="image" Source="..\View\Resources\blank_document_icon.png" RenderOptions.BitmapScalingMode="HighQuality" Height="26" HorizontalAlignment="Center" Margin="0,5.5,0,15.5" RenderTransformOrigin="0.5,0.5">
+                                <Image.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform/>
+                                        <SkewTransform/>
+                                        <RotateTransform/>
+                                        <TranslateTransform/>
+                                    </TransformGroup>
+                                </Image.RenderTransform>
+                            </Image>
+                            <Label x:Name="label1" Content="New" RenderTransformOrigin="0.5,0.5" Style="{StaticResource undericon_title}">
+                                <Label.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform/>
+                                        <SkewTransform/>
+                                        <RotateTransform/>
+                                        <TranslateTransform/>
+                                    </TransformGroup>
+                                </Label.RenderTransform>
+                            </Label>
+                            <ContentPresenter x:Name="contentPresenter" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RenderTransformOrigin="0.5,0.5">
+                                <ContentPresenter.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform/>
+                                        <SkewTransform/>
+                                        <RotateTransform/>
+                                        <TranslateTransform/>
+                                    </TransformGroup>
+                                </ContentPresenter.RenderTransform>
+                            </ContentPresenter>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True"/>
+                            <Trigger Property="IsDefaulted" Value="True"/>
+                            <Trigger Property="IsMouseOver" Value="True"/>
+                            <Trigger Property="IsPressed" Value="True"/>
+                            <Trigger Property="IsEnabled" Value="False"/>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="open_icon" TargetType="{x:Type Button}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal"/>
+                                    <VisualState x:Name="MouseOver">
+                                        <Storyboard>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)" Storyboard.TargetName="label">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.265"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)" Storyboard.TargetName="label">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.265"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="label">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)" Storyboard.TargetName="label">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="-0.894"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)" Storyboard.TargetName="image">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.265"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)" Storyboard.TargetName="image">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.265"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="image">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)" Storyboard.TargetName="image">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="-1.888"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)" Storyboard.TargetName="label1">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.265"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)" Storyboard.TargetName="label1">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.265"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="label1">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)" Storyboard.TargetName="label1">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="2.683"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)" Storyboard.TargetName="contentPresenter">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.265"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)" Storyboard.TargetName="contentPresenter">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.265"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="contentPresenter">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)" Storyboard.TargetName="contentPresenter">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="-0.894"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed"/>
+                                    <VisualState x:Name="Disabled"/>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Label x:Name="label" Height="3" Width="40" RenderTransformOrigin="0.5,0.5">
+                                <Label.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform/>
+                                        <SkewTransform/>
+                                        <RotateTransform/>
+                                        <TranslateTransform/>
+                                    </TransformGroup>
+                                </Label.RenderTransform>
+                            </Label>
+                            <Image x:Name="image" Source="..\View\Resources\open_icon.png" RenderOptions.BitmapScalingMode="HighQuality" Height="26" HorizontalAlignment="Center" Margin="0,6.75,0,14.25" RenderTransformOrigin="0.5,0.5">
+                                <Image.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform/>
+                                        <SkewTransform/>
+                                        <RotateTransform/>
+                                        <TranslateTransform/>
+                                    </TransformGroup>
+                                </Image.RenderTransform>
+                            </Image>
+                            <Label x:Name="label1" Content="Open" RenderTransformOrigin="0.5,0.5" Style="{StaticResource undericon_title}">
+                                <Label.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform/>
+                                        <SkewTransform/>
+                                        <RotateTransform/>
+                                        <TranslateTransform/>
+                                    </TransformGroup>
+                                </Label.RenderTransform>
+                            </Label>
+                            <ContentPresenter x:Name="contentPresenter" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RenderTransformOrigin="0.5,0.5">
+                                <ContentPresenter.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform/>
+                                        <SkewTransform/>
+                                        <RotateTransform/>
+                                        <TranslateTransform/>
+                                    </TransformGroup>
+                                </ContentPresenter.RenderTransform>
+                            </ContentPresenter>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True"/>
+                            <Trigger Property="IsDefaulted" Value="True"/>
+                            <Trigger Property="IsMouseOver" Value="True"/>
+                            <Trigger Property="IsPressed" Value="True"/>
+                            <Trigger Property="IsEnabled" Value="False"/>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="save_icon" TargetType="{x:Type Button}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal"/>
+                                    <VisualState x:Name="MouseOver">
+                                        <Storyboard>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)" Storyboard.TargetName="label">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.267"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="label">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)" Storyboard.TargetName="image">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.267"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="image">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)" Storyboard.TargetName="label1">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.267"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="label1">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)" Storyboard.TargetName="contentPresenter">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.267"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="contentPresenter">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)" Storyboard.TargetName="label">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.267"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)" Storyboard.TargetName="label">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="-0.867"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)" Storyboard.TargetName="image">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.267"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)" Storyboard.TargetName="image">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="-1.933"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)" Storyboard.TargetName="label1">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.267"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)" Storyboard.TargetName="label1">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="2.733"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)" Storyboard.TargetName="contentPresenter">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.267"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)" Storyboard.TargetName="contentPresenter">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="-0.867"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed"/>
+                                    <VisualState x:Name="Disabled"/>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Label x:Name="label" Height="3" Width="40" RenderTransformOrigin="0.5,0.5">
+                                <Label.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform/>
+                                        <SkewTransform/>
+                                        <RotateTransform/>
+                                        <TranslateTransform/>
+                                    </TransformGroup>
+                                </Label.RenderTransform>
+                            </Label>
+                            <Image x:Name="image" Source="..\View\Resources\save_icon.png" RenderOptions.BitmapScalingMode="HighQuality" Height="26" HorizontalAlignment="Center" Margin="0,6.5,0,14.5" RenderTransformOrigin="0.5,0.5">
+                                <Image.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform/>
+                                        <SkewTransform/>
+                                        <RotateTransform/>
+                                        <TranslateTransform/>
+                                    </TransformGroup>
+                                </Image.RenderTransform>
+                            </Image>
+                            <Label x:Name="label1" Content="Save" RenderTransformOrigin="0.5,0.5" Style="{StaticResource undericon_title}">
+                                <Label.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform/>
+                                        <SkewTransform/>
+                                        <RotateTransform/>
+                                        <TranslateTransform/>
+                                    </TransformGroup>
+                                </Label.RenderTransform>
+                            </Label>
+                            <ContentPresenter x:Name="contentPresenter" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RenderTransformOrigin="0.5,0.5">
+                                <ContentPresenter.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform/>
+                                        <SkewTransform/>
+                                        <RotateTransform/>
+                                        <TranslateTransform/>
+                                    </TransformGroup>
+                                </ContentPresenter.RenderTransform>
+                            </ContentPresenter>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True"/>
+                            <Trigger Property="IsDefaulted" Value="True"/>
+                            <Trigger Property="IsMouseOver" Value="True"/>
+                            <Trigger Property="IsPressed" Value="True"/>
+                            <Trigger Property="IsEnabled" Value="False"/>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="start_icon" TargetType="{x:Type Button}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal"/>
+                                    <VisualState x:Name="MouseOver">
+                                        <Storyboard>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)" Storyboard.TargetName="label">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.2"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)" Storyboard.TargetName="label">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.2"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="label">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)" Storyboard.TargetName="label">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="-0.525"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)" Storyboard.TargetName="image">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.2"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)" Storyboard.TargetName="image">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.2"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="image">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)" Storyboard.TargetName="image">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="-1.575"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)" Storyboard.TargetName="label1">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.2"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)" Storyboard.TargetName="label1">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.2"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="label1">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)" Storyboard.TargetName="label1">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="2.175"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)" Storyboard.TargetName="contentPresenter">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.2"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)" Storyboard.TargetName="contentPresenter">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.2"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="contentPresenter">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)" Storyboard.TargetName="contentPresenter">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="-0.525"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed"/>
+                                    <VisualState x:Name="Disabled"/>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Label x:Name="label" Height="3" Width="40" RenderTransformOrigin="0.5,0.5">
+                                <Label.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform/>
+                                        <SkewTransform/>
+                                        <RotateTransform/>
+                                        <TranslateTransform/>
+                                    </TransformGroup>
+                                </Label.RenderTransform>
+                            </Label>
+                            <Image x:Name="image" Source="..\View\Resources\start_icon.png" RenderOptions.BitmapScalingMode="HighQuality" Height="26" HorizontalAlignment="Center" Margin="0,5.25,0,15.75" RenderTransformOrigin="0.5,0.5">
+                                <Image.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform/>
+                                        <SkewTransform/>
+                                        <RotateTransform/>
+                                        <TranslateTransform/>
+                                    </TransformGroup>
+                                </Image.RenderTransform>
+                            </Image>
+                            <Label x:Name="label1" Content="Start" RenderTransformOrigin="0.5,0.5" Style="{StaticResource undericon_title}">
+                                <Label.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform/>
+                                        <SkewTransform/>
+                                        <RotateTransform/>
+                                        <TranslateTransform/>
+                                    </TransformGroup>
+                                </Label.RenderTransform>
+                            </Label>
+                            <ContentPresenter x:Name="contentPresenter" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RenderTransformOrigin="0.5,0.5">
+                                <ContentPresenter.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform/>
+                                        <SkewTransform/>
+                                        <RotateTransform/>
+                                        <TranslateTransform/>
+                                    </TransformGroup>
+                                </ContentPresenter.RenderTransform>
+                            </ContentPresenter>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True"/>
+                            <Trigger Property="IsDefaulted" Value="True"/>
+                            <Trigger Property="IsMouseOver" Value="True"/>
+                            <Trigger Property="IsPressed" Value="True"/>
+                            <Trigger Property="IsEnabled" Value="False"/>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="stop_icon" TargetType="{x:Type Button}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal"/>
+                                    <VisualState x:Name="MouseOver">
+                                        <Storyboard>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)" Storyboard.TargetName="label">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.2"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="label">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)" Storyboard.TargetName="image">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.2"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="image">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)" Storyboard.TargetName="label1">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.2"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="label1">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)" Storyboard.TargetName="contentPresenter">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.2"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="contentPresenter">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)" Storyboard.TargetName="label">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.2"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)" Storyboard.TargetName="label">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="-0.484"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)" Storyboard.TargetName="image">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.2"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)" Storyboard.TargetName="image">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="-1.616"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)" Storyboard.TargetName="label1">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.2"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)" Storyboard.TargetName="label1">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="2.216"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)" Storyboard.TargetName="contentPresenter">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.2"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)" Storyboard.TargetName="contentPresenter">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="-0.484"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed"/>
+                                    <VisualState x:Name="Disabled"/>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Label x:Name="label" Height="3" Width="40" RenderTransformOrigin="0.5,0.5">
+                                <Label.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform/>
+                                        <SkewTransform/>
+                                        <RotateTransform/>
+                                        <TranslateTransform/>
+                                    </TransformGroup>
+                                </Label.RenderTransform>
+                            </Label>
+                            <Image x:Name="image" Source="..\View\Resources\stop_icon.png" RenderOptions.BitmapScalingMode="HighQuality" Height="26" HorizontalAlignment="Center" Margin="0,4.838,0,16.161" RenderTransformOrigin="0.5,0.5">
+                                <Image.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform/>
+                                        <SkewTransform/>
+                                        <RotateTransform/>
+                                        <TranslateTransform/>
+                                    </TransformGroup>
+                                </Image.RenderTransform>
+                            </Image>
+                            <Label x:Name="label1" Content="Stop" RenderTransformOrigin="0.5,0.5" Style="{StaticResource undericon_title}">
+                                <Label.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform/>
+                                        <SkewTransform/>
+                                        <RotateTransform/>
+                                        <TranslateTransform/>
+                                    </TransformGroup>
+                                </Label.RenderTransform>
+                            </Label>
+                            <ContentPresenter x:Name="contentPresenter" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RenderTransformOrigin="0.5,0.5">
+                                <ContentPresenter.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform/>
+                                        <SkewTransform/>
+                                        <RotateTransform/>
+                                        <TranslateTransform/>
+                                    </TransformGroup>
+                                </ContentPresenter.RenderTransform>
+                            </ContentPresenter>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True"/>
+                            <Trigger Property="IsDefaulted" Value="True"/>
+                            <Trigger Property="IsMouseOver" Value="True"/>
+                            <Trigger Property="IsPressed" Value="True"/>
+                            <Trigger Property="IsEnabled" Value="False"/>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="minimized" TargetType="{x:Type Button}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal"/>
+                                    <VisualState x:Name="MouseOver">
+                                        <Storyboard>
+                                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)" Storyboard.TargetName="rectangle">
+                                                <EasingColorKeyFrame KeyTime="0" Value="#FF818A8F"/>
+                                                <EasingColorKeyFrame KeyTime="0:0:0.2" Value="#FFBCD8BC"/>
+                                            </ColorAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed"/>
+                                    <VisualState x:Name="Disabled"/>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Rectangle x:Name="rectangle" Height="2.667" Margin="6.72,0,6.78,9.583" VerticalAlignment="Bottom" Fill="#FF818A8F"/>
+                            <ContentPresenter x:Name="contentPresenter" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" d:IsHidden="True"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True"/>
+                            <Trigger Property="IsDefaulted" Value="True"/>
+                            <Trigger Property="IsMouseOver" Value="True"/>
+                            <Trigger Property="IsPressed" Value="True"/>
+                            <Trigger Property="IsEnabled" Value="False"/>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="normal_window_icon" TargetType="{x:Type Button}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid>
+
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal"/>
+                                    <VisualState x:Name="MouseOver">
+                                        <Storyboard>
+                                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)" Storyboard.TargetName="rectangle">
+                                                <EasingColorKeyFrame KeyTime="0" Value="#FF818A8F"/>
+                                                <EasingColorKeyFrame KeyTime="0:0:0.2" Value="#FFBCD8BC"/>
+                                            </ColorAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed"/>
+                                    <VisualState x:Name="Disabled"/>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+
+                            <Rectangle x:Name="rectangle" Fill="#FF818A8F" Width="13" Height="10"/>
+                            <Rectangle x:Name="rectangle1" Width="10" Fill="#FF1E4229" Height="5" Margin="6,13.583,6,11.416"/>
+
+                            <ContentPresenter x:Name="contentPresenter" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" d:IsHidden="True"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True"/>
+                            <Trigger Property="IsDefaulted" Value="True"/>
+                            <Trigger Property="IsMouseOver" Value="True"/>
+                            <Trigger Property="IsPressed" Value="True"/>
+                            <Trigger Property="IsEnabled" Value="False"/>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="close_icon" TargetType="{x:Type Button}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal"/>
+                                    <VisualState x:Name="MouseOver">
+                                        <Storyboard>
+                                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)" Storyboard.TargetName="path">
+                                                <EasingColorKeyFrame KeyTime="0" Value="#FF818A8F"/>
+                                                <EasingColorKeyFrame KeyTime="0:0:0.2" Value="#FFBCD8BC"/>
+                                            </ColorAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed"/>
+                                    <VisualState x:Name="Disabled"/>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Path x:Name="path" Data="M679.58364,19.333333 C683.58364,19.333333 683.58388,19.333667 683.58388,19.333667 L685.08333,17 686.5004,19.166667 690.16708,19.083333 687.08394,14.750337 690.66741,10.417329 687.33372,10.416996 685.16736,13.416886 683.08365,10.50033 679.83332,10.50033 683.16722,15.00016 z" Fill="#FF818A8F" HorizontalAlignment="Right" Margin="0,10.417,5.833,10.667" Stretch="Fill" Width="11.084"/>
+                            <ContentPresenter x:Name="contentPresenter" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" d:IsHidden="True"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True"/>
+                            <Trigger Property="IsDefaulted" Value="True"/>
+                            <Trigger Property="IsMouseOver" Value="True"/>
+                            <Trigger Property="IsPressed" Value="True"/>
+                            <Trigger Property="IsEnabled" Value="False"/>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="restart_btn" TargetType="{x:Type Button}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal"/>
+                                    <VisualState x:Name="MouseOver">
+                                        <Storyboard>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)" Storyboard.TargetName="image">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.261"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)" Storyboard.TargetName="image">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.261"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="image">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)" Storyboard.TargetName="image">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="-2.369"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)" Storyboard.TargetName="label1">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.261"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)" Storyboard.TargetName="label1">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.261"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="label1">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)" Storyboard.TargetName="label1">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="3.151"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)" Storyboard.TargetName="contentPresenter">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.261"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)" Storyboard.TargetName="contentPresenter">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.261"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="contentPresenter">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)" Storyboard.TargetName="contentPresenter">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="-1.238"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed"/>
+                                    <VisualState x:Name="Disabled"/>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Image x:Name="image" Source="..\View\Resources\restart_icon.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="0,6.165,0,14.834" Height="26" RenderTransformOrigin="0.5,0.5">
+                                <Image.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform/>
+                                        <SkewTransform/>
+                                        <RotateTransform/>
+                                        <TranslateTransform/>
+                                    </TransformGroup>
+                                </Image.RenderTransform>
+                            </Image>
+                            <Label x:Name="label1" Width="47" Content="Restart" RenderTransformOrigin="0.5,0.5" Style="{StaticResource undericon_title}">
+                                <Label.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform/>
+                                        <SkewTransform/>
+                                        <RotateTransform/>
+                                        <TranslateTransform/>
+                                    </TransformGroup>
+                                </Label.RenderTransform>
+                            </Label>
+                            <ContentPresenter x:Name="contentPresenter" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" d:IsHidden="True" RenderTransformOrigin="0.5,0.5">
+                                <ContentPresenter.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform/>
+                                        <SkewTransform/>
+                                        <RotateTransform/>
+                                        <TranslateTransform/>
+                                    </TransformGroup>
+                                </ContentPresenter.RenderTransform>
+                            </ContentPresenter>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True"/>
+                            <Trigger Property="IsDefaulted" Value="True"/>
+                            <Trigger Property="IsMouseOver" Value="True"/>
+                            <Trigger Property="IsPressed" Value="True"/>
+                            <Trigger Property="IsEnabled" Value="False"/>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="WindowIcon" TargetType="{x:Type Button}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid>
+                            <Image Style="{DynamicResource AppImageStyle}">
+                                <Image.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Header="Restore">
+                                            <MenuItem.Icon>
+                                                <Image/>
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                    </ContextMenu>
+                                </Image.ContextMenu>
+                            </Image>
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True"/>
+                            <Trigger Property="IsDefaulted" Value="True"/>
+                            <Trigger Property="IsMouseOver" Value="True"/>
+                            <Trigger Property="IsPressed" Value="True"/>
+                            <Trigger Property="IsEnabled" Value="False"/>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding New}" Gesture="CTRL+N"/>
+        <KeyBinding Command="{Binding Open}" Gesture="CTRL+O"/>
+        <KeyBinding Command="{Binding Save}" Gesture="CTRL+S"/>
+    </Window.InputBindings>
+
+    <Grid Background="#1c4027">
+        <Grid Margin="0" x:Name="MainDockpanel">
+            <DockPanel >
+                <Grid DockPanel.Dock="Top" Height="32">
+                    <Grid.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FF235631" Offset="0"/>
+                            <GradientStop Color="#FF1B3825" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Grid.Background>
+
+                    <DockPanel LastChildFill="True" x:Name="DragableArea" MouseDown="DragableGridMouseDown" MouseMove="DragableGrid_OnMouseMove">
+                        <DockPanel DockPanel.Dock="Left">
+                            <Button x:Name="WindowIcon" RenderOptions.BitmapScalingMode="HighQuality" Content="" DockPanel.Dock="Left" Height="20" Margin="10,0,5,0" Style="{DynamicResource WindowIcon}" Click="WindowsIcon_Click">
+                                <Button.ContextMenu>
+                                    <ContextMenu x:Name="WindowIconMenu">
+                                        <MenuItem x:Name="RestoreWindowSize" Header="Restore" Click="RestoreWindowSize_Click" >
+                                            <MenuItem.Icon>
+                                                <TextBlock Text="2" FontFamily="Webdings" Foreground="Gray"/>
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <MenuItem x:Name="MinimizedWindow" Header="Minimize" Click="MinimizeWindow_Click">
+                                            <MenuItem.Icon>
+                                                <TextBlock Text="0" FontFamily="Webdings" Foreground="Gray"/>
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <MenuItem x:Name="MaximizeWindow" Header="Maximize" Click="MaximizeWindow_Click">
+                                            <MenuItem.Icon>
+                                                <TextBlock Text="1" FontFamily="Webdings" Foreground="Gray"/>
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <Separator/>
+                                        <MenuItem Header="Close   Alt+F4" x:Name="CloseWindow"  Click="CloseWindow_Click">
+                                            <MenuItem.Icon>
+                                                <TextBlock Text="r" FontFamily="Webdings" Foreground="Gray" FontWeight="Bold"/>
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                    </ContextMenu>
+                                </Button.ContextMenu>
+                            </Button>
+                            <Image  Source="..\View\Resources\ozeki_logo.png" Height="16" RenderOptions.BitmapScalingMode="HighQuality"/>
+                            <Label Content="{Binding ApplicationInformation.ProductName}" VerticalContentAlignment="Center" FontFamily="Arial" FontSize="14" FontWeight="Normal" Foreground="#bbc4bc" DockPanel.Dock="Left"/>
+                        </DockPanel>
+                        <TextBlock DockPanel.Dock="Left" VerticalAlignment="Stretch" />
+                    </DockPanel>
+
+                    <DockPanel HorizontalAlignment="Right" VerticalAlignment="Center" DockPanel.Dock="Right" Margin="0,0,5,0">
+                        <TextBlock x:Name="MinimizeButton" Text="0" FontFamily="Webdings" Foreground="Gray" Margin="5,0,0,0" HorizontalAlignment="Right" VerticalAlignment="Top" MouseLeftButtonUp="MinimizeButtonMouseLeftButtonUp" MouseEnter="MinimizeButton_OnMouseEnter" MouseLeave="MinizeButton_MouseLeave"/>
+                        <TextBlock x:Name="MaximizeButton" Text="1" FontFamily="Webdings" Visibility="Collapsed" Foreground="Gray" Margin="5,0,0,0" HorizontalAlignment="Right" VerticalAlignment="Top" MouseLeftButtonUp="MaximizeButtonMouseLeftButtonUp" MouseEnter="MaximizeButton_OnMouseEnter" MouseLeave="MaximizeButton_MouseLeave"/>
+                        <TextBlock x:Name="ChangeViewButton" Text="2" FontFamily="Webdings" Foreground="Gray" Margin="5,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Right" MouseLeftButtonUp="ChangeViewButtonMouseLeftButtonUp" MouseEnter="ChangeViewButton_OnMouseEnter" MouseLeave="ChangeViewButton_MouseLeave"/>
+                        <TextBlock x:Name="CloseButton" Text="r" FontFamily="Webdings" Foreground="Gray" Margin="5,0,8,0" HorizontalAlignment="Right" VerticalAlignment="Top" MouseLeftButtonUp="CloseButtonMouseLeftButtonUp" MouseEnter="CloseButton_OnMouseEnter" MouseLeave="CloseButton_MouseLeave"/>
+                    </DockPanel>
+
+
+                    <Path Data="M684.08365,16.333333 L686.25007,15.166863 C686.25007,15.166863 684.08365,16.333333 684.08365,16.333333 z" Fill="#FF1E4229" HorizontalAlignment="Right" Margin="0,0,12.75,13.667" Stretch="Fill" Width="2.167" Height="1.166" VerticalAlignment="Bottom"/>
+                </Grid>
+                <Menu x:Name="UpperMenu" DockPanel.Dock="Top"   >
+                    <Menu.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FF1A2F21" Offset="0"/>
+                            <GradientStop Color="#FF20442A" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Menu.Background>
+
+                    <MenuItem Header="_File" Foreground="White" Style="{StaticResource menutitles}" Margin="10,0,5,0">
+                        <MenuItem Header="_New..." Command="{Binding New}" Style="{StaticResource submenutitles}"/>
+                        <Separator />
+                        <MenuItem Header="_Open..." Command="{Binding Open}" Style="{StaticResource submenutitles}"/>
+                        <Separator />
+                        <MenuItem Header="_Save As..." Command="{Binding Save}" Style="{StaticResource submenutitles}"/>
+                        <Separator />
+                        <MenuItem Header="_Exit" Click="Exit_OnClick" Style="{StaticResource submenutitles}" />
+                    </MenuItem>
+                    <MenuItem Header="Settings" Command="{Binding ShowSettings}" Foreground="White" Style="{StaticResource menutitles}"/>
+                    <MenuItem Header="_Help" Foreground="White" Style="{StaticResource menutitles}">
+                        <MenuItem Header="_Visit to our Home Page" Command="{Binding HomePage}" Style="{StaticResource submenutitles}"/>
+                        <MenuItem Header="_About" Command="{Binding About}" Style="{StaticResource submenutitles}"/>
+                    </MenuItem>
+                </Menu>
+
+                <DockPanel DockPanel.Dock="Top" Background="#FF17913F" Height="47" LastChildFill="True">
+                    <DockPanel Height="47" HorizontalAlignment="Stretch">
+                        <DockPanel.Background>
+                            <ImageBrush ImageSource="..\View\Resources\broadcast_menu_bg.png">
+                            </ImageBrush>
+                        </DockPanel.Background>
+
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                            <Button Content="" Height="47" Style="{DynamicResource new_icon}" Width="47" Command="{Binding New}"/>
+                            <Rectangle Height="30" Width="1" Fill="#3d6a3b"/>
+                            <Rectangle Height="30" Width="1" Fill="#8fbd8f"/>
+                            <Button Content="" Height="47" Style="{DynamicResource open_icon}" Width="47" Command="{Binding Open}"/>
+                            <Rectangle Height="30" Width="1" Fill="#3d6a3b"/>
+                            <Rectangle Height="30" Width="1" Fill="#8fbd8f"/>
+                            <Button Content="" Height="47" Style="{DynamicResource save_icon}" Width="47" Command="{Binding Save}"/>
+                            <Rectangle Height="30" Width="1" Fill="#3d6a3b"/>
+                            <Rectangle Height="30" Width="1" Fill="#8fbd8f"/>
+                            <Button Content="" Height="47" Style="{DynamicResource start_icon}" Width="47" Command="{Binding Start}"/>
+                            <Rectangle Height="30" Width="1" Fill="#3d6a3b"/>
+                            <Rectangle Height="30" Width="1" Fill="#8fbd8f"/>
+                            <Button Content="" Height="47" Style="{DynamicResource stop_icon}" Width="47" Command="{Binding Stop}"/>
+                            <Rectangle Height="30" Width="1" Fill="#3d6a3b"/>
+                            <Rectangle Height="30" Width="1" Fill="#8fbd8f"/>
+                            
+                            <Label/>
+                        </StackPanel>
+                    </DockPanel>
+                    <DockPanel HorizontalAlignment="Right" Margin="0,0,15,0">
+                        <Image Source="..\View\Resources\ozeki_logo.png" Height="25" DockPanel.Dock="Left" VerticalAlignment="Center" RenderOptions.BitmapScalingMode="HighQuality"/>
+                        <Label Content="{Binding ApplicationInformation.ProductName}" DockPanel.Dock="Left" VerticalContentAlignment="Center" FontFamily="Arial" FontWeight="Normal" FontSize="20" Foreground="#bbc4bc"/>
+                    </DockPanel>
+                </DockPanel>
+
+                <Grid Height="25" DockPanel.Dock="Bottom">
+                    <Grid.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FF1D4027" Offset="0"/>
+                            <GradientStop Color="#FF1A3122" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Grid.Background>
+                    <DockPanel VerticalAlignment="Top" Margin="8,0">
+                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" Margin="0,0,10,0">
+                            <TextBlock Text="Overall progress" Foreground="White"/>
+                            <ProgressBar Height="20"  Value="{Binding DoneJobs}" Maximum="{Binding AllJobs}" Width="200" Margin="10,0,10,0"/>
+                            <TextBlock x:Name="TbckDoneMessage" Text="{Binding DoneJobs}" Foreground="White"/>
+                            <TextBlock Text="/" Foreground="White"/>
+                            <TextBlock x:Name="TbckAllmessage" Text="{Binding AllJobs}" Foreground="White"/>
+                            <TextBlock Text=" items" Foreground="White"/>
+                        </StackPanel>
+                        <TextBlock Visibility="Hidden"></TextBlock>
+                    </DockPanel>
+                </Grid>
+
+                <DataGrid Margin="5" x:Name="CustumerDataGrid" ItemsSource="{Binding Customers, NotifyOnValidationError=True}" SelectionUnit="FullRow" ClipboardCopyMode="IncludeHeader"
+                          AutoGenerateColumns="True" DockPanel.Dock="Bottom" SelectionMode="Extended" CanUserAddRows="False" ColumnWidth="*" 
+                          KeyDown="DataGrid_KeyDown" CanUserSortColumns="False" IsReadOnly="{Binding IsReadOnly}"
+                          AutoGeneratingColumn="CustumerDataGrid_AutoGeneratingColumn" 
+                          LoadingRow="CustumerDataGrid_OnLoadingRow" BeginningEdit="CustumerDataGrid_BeginningEdit" 
+                          RowEditEnding="CustumerDataGrid_OnRowEditEnding"  CellEditEnding="CustumerDataGrid_OnCellEditEnding"  
+                          RowStyle="{StaticResource ReadOnlyCheck}" >
+
+                    <DataGrid.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem x:Name="DatagridContext_CutMenu" Header="_Cut" Command="{Binding Cut}" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItems}"/>
+                            <MenuItem x:Name="DatagridContext_CopyMenu" Header="_Copy" Command="{Binding Copy}" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItems}"/>
+                            <MenuItem x:Name="DatagridContext_PasteMenu" Header="_Paste" Command="{Binding Paste}" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItems}"/>
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
+                </DataGrid>
+
+            </DockPanel>
+            <tb:TaskbarIcon x:Name="TaskBarIcon" MenuActivation="RightClick" Style="{DynamicResource AppTaskbarIconStyle}" TrayLeftMouseUp="TaskBarIcon_OnTrayLeftMouseUp">
+                <tb:TaskbarIcon.ContextMenu>
+                    <ContextMenu x:Name="ContextMenu">
+                        <MenuItem Header="About" Command="{Binding About}"/>
+                        <MenuItem Header="Close" Click="Exit_OnClick" />
+                    </ContextMenu>
+                </tb:TaskbarIcon.ContextMenu>
+            </tb:TaskbarIcon>
+        </Grid>
+    </Grid>
+</Window>

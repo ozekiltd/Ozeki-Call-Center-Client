@@ -1,0 +1,25 @@
+﻿<Window x:Class="OzCommon.View.WaitWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Please wait" Height="140" Width="300" WindowStartupLocation="CenterScreen" WindowStyle="None" Style="{DynamicResource WindowIconStyle}" AllowsTransparency="True">
+    
+    <DockPanel Background="#186218">
+        <Grid Margin="8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFFDFDFD" Offset="0"/>
+                    <GradientStop Color="#FF6C9B6C" Offset="1"/>
+                </LinearGradientBrush>
+            </Grid.Background>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="0.8*"/>
+            </Grid.RowDefinitions>
+            <TextBlock x:Name="TBCK_LoadingMessage" Width="240" Height="23" Grid.Row="0" VerticalAlignment="Center" FontFamily="Arial" FontSize="14" HorizontalAlignment="Center" TextAlignment="Center" />
+            <ProgressBar Grid.Row="1" Width="240" Height="25" VerticalAlignment="Top" IsIndeterminate="True" />
+        </Grid>
+    </DockPanel>
+</Window>

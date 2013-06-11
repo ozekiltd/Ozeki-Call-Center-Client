@@ -1,0 +1,89 @@
+﻿<UserControl x:Class="OPSCallCenterCRM.View.IncomingCallPopup"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:model="clr-namespace:OPSCallCenterCRMAPI;assembly=OPSCallCenterCRMAPI" mc:Ignorable="d" Width="308" Height="122" Background="White">
+    <UserControl.Resources>
+        <Storyboard x:Key="Storyboard1">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="dockPanel">
+                <EasingDoubleKeyFrame KeyTime="0" Value="309.5"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="-12.5"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+    </UserControl.Resources>
+    <UserControl.Triggers>
+        <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+            <BeginStoryboard Storyboard="{StaticResource Storyboard1}"/>
+        </EventTrigger>
+    </UserControl.Triggers>
+    <UserControl.DataContext>
+        <model:CrmEntry></model:CrmEntry>
+    </UserControl.DataContext>
+    <DockPanel x:Name="dockPanel" RenderTransformOrigin="0.5,0.5">
+        <DockPanel.RenderTransform>
+            <TransformGroup>
+                <ScaleTransform/>
+                <SkewTransform/>
+                <RotateTransform/>
+                <TranslateTransform/>
+            </TransformGroup>
+        </DockPanel.RenderTransform>
+        <DockPanel.Background>
+            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                <GradientStop Color="#FF186218" Offset="0"/>
+                <GradientStop Color="#FF213B1E" Offset="1"/>
+            </LinearGradientBrush>
+        </DockPanel.Background>
+
+        <Grid x:Name="grid" Margin="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.030*"/>
+                <ColumnDefinition Width="0.320*"/>
+                <ColumnDefinition Width="0.620*"/>
+                <ColumnDefinition Width="0.030*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.093*"/>
+                <RowDefinition Height="0.346*"/>
+                <RowDefinition Height="0.468*"/>
+                <RowDefinition Height="0.093*"/>
+            </Grid.RowDefinitions>
+            <Grid.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="White" Offset="0"/>
+                    <GradientStop Color="#FF76A65A" Offset="1"/>
+                </LinearGradientBrush>
+            </Grid.Background>
+
+            <StackPanel Orientation="Horizontal" Grid.RowSpan="4" Grid.ColumnSpan="4">
+                <Image HorizontalAlignment="Left" Height="100" Margin="10" VerticalAlignment="Center" Width="100" Source="../Resources/callassistant_icon_green.png" RenderTransformOrigin="-0.95,0.35"/>
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="15,0,0,0">
+                    <Label Grid.Column="2"
+                           Grid.Row="1"
+                           Content="Incoming Call"
+                           FontFamily="Arial"
+                           FontWeight="Bold"
+                           FontSize="19"
+                           VerticalAlignment="Top"
+                           HorizontalAlignment="Center"
+                           Foreground="#FF186118"
+                           Height="31.939" />
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                        <TextBlock FontSize="20" HorizontalAlignment="Center" Text="{Binding FirstName}"/>
+                        <TextBlock FontSize="20" HorizontalAlignment="Center" Text="{Binding LastName}" Margin="0,0,10,0"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock HorizontalAlignment="Center" Text="calling from " />
+                        <TextBlock HorizontalAlignment="Center" Text="{Binding PhoneNumber}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock HorizontalAlignment="Center" Text="from Company "/>
+                        <TextBlock HorizontalAlignment="Center" Text="{Binding BusinessName}"/>
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+    </DockPanel>
+</UserControl>
